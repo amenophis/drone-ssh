@@ -55,6 +55,11 @@ func main() {
 			Usage:  "execute commands",
 			EnvVar: "PLUGIN_SCRIPT,SSH_SCRIPT",
 		},
+		cli.StringSliceFlag{
+			Name:   "env",
+			Usage:  "environment variables to inject in ssh session",
+			EnvVar: "PLUGIN_ENV,SSH_ENV",
+		},
 		cli.StringFlag{
 			Name:  "env-file",
 			Usage: "source env file",
@@ -73,13 +78,14 @@ func run(c *cli.Context) error {
 
 	plugin := Plugin{
 		Config: Config{
-			Key:      c.String("ssh-key"),
-			User:     c.String("user"),
-			Host:     c.StringSlice("host"),
-			Port:     c.Int("port"),
-			Sleep:    c.Int("sleep"),
-			Timeout:  c.Duration("timeout"),
-			Script:   c.StringSlice("script"),
+			Key:     c.String("ssh-key"),
+			User:    c.String("user"),
+			Host:    c.StringSlice("host"),
+			Port:    c.Int("port"),
+			Sleep:   c.Int("sleep"),
+			Timeout: c.Duration("timeout"),
+			Script:  c.StringSlice("script"),
+			Env:     c.StringSlice("env"),
 		},
 	}
 

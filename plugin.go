@@ -13,13 +13,14 @@ import (
 
 type (
 	Config struct {
-		Key      string        `json:"key"`
-		User     string        `json:"user"`
-		Host     []string      `json:"host"`
-		Port     int           `json:"port"`
-		Sleep    int           `json:"sleep"`
-		Timeout  time.Duration `json:"timeout"`
-		Script   []string      `json:"script"`
+		Key     string        `json:"key"`
+		User    string        `json:"user"`
+		Host    []string      `json:"host"`
+		Port    int           `json:"port"`
+		Sleep   int           `json:"sleep"`
+		Timeout time.Duration `json:"timeout"`
+		Script  []string      `json:"script"`
+		Env     []string      `json:"script"`
 	}
 
 	Plugin struct {
@@ -69,6 +70,13 @@ func (p Plugin) Exec() error {
 
 		session.Stdout = os.Stdout
 		session.Stderr = os.Stderr
+
+		for _, name := range p.Config.Env {
+			value, exists := os.LookupEnv(name)
+			if exists == true {
+				session.Setenv(name, value)
+			}
+		}
 
 		if err := session.Run(strings.Join(p.Config.Script, "\n")); err != nil {
 			return err
